@@ -9,11 +9,11 @@ ___
 
 Requirements
 
-Ruby (2.x)
+* Ruby (2.x)
 
 Windows : http://rubyinstaller.org/downloads/
 
-Gems
+* Gems
 
 gem install rally_api
 gem install nokogiri
@@ -23,13 +23,13 @@ ___
 
 To Run
 
-Copy and configure the sample.json file.
+1. Create an api-key go to https://rally1.rallydev.com/login
 
-Create an api-key go to https://rally1.rallydev.com/login
+2. Copy and configure the sample.json file.
 
-run with 
-'''
+3. run with 
+```
 ruby rally_test_results.rb <config.json> <build number>
-'''
+```
 
 
