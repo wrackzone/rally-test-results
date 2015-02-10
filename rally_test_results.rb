@@ -157,6 +157,7 @@ class RallyTestResults
 
 
 			xmldoc.xpath(xp).each { |ts| 
+				# TODO: timestamp="10 Feb 2015 19:21:53 GMT"
 				timestamp = ts.at_xpath("@timestamp") ? ts.at_xpath("@timestamp").value : today8601
 				# print "Timestamp: #{timestamp}\n"
 				verdict = true
@@ -234,9 +235,10 @@ class RallyTestResults
 	def run
 		# iterate the xml files
 		# Dir.glob('Sample/junit/*.xml') do |rb_file|
-		print "looking for xml files in : ", @resultsPath,"\n"
-		Dir.glob(@resultsPath+"/*.xml") do |rb_file|
-			print rb_file,"\n"
+		# print "looking for xml files in : ", @resultsPath,"\n"
+		# Dir.glob(@resultsPath+"/*.xml") do |rb_file|
+		Dir.glob(@resultsPath+"/**/*.xml") do |rb_file|
+			print "\nProcessing:",rb_file,"\n"
 			process_file (rb_file)
 		end
 	end

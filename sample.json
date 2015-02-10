@@ -1,0 +1,8 @@
+{	
+	"api-key" : "",
+	"workspace" : "",
+	"project" : "",
+	"base-url" : "https://rally1.rallydev.com/slm",
+	"results-path" : "./sample/results"
+}
+
