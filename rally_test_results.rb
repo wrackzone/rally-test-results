@@ -4,6 +4,7 @@ require 'rally_api'
 require 'markaby'
 require 'json'
 require 'time'
+require 'logger'
 
 class RallyTestResults 
 
@@ -51,6 +52,8 @@ class RallyTestResults
 		@resultsPath = config_hash["results-path"]
 
 		print "Project:#{@project["Name"]}\n"
+
+		@logger = Logger.new("rally-test-results.log")
 
 	end
 
@@ -143,10 +146,37 @@ class RallyTestResults
 
 	end
 
+	def find_test_case_id(tc_id)
+
+		test_query = RallyAPI::RallyQuery.new()
+		test_query.type = "testcase"
+		test_query.fetch = "FormattedID,Name,ObjectID"
+		test_query.page_size = 200       #optional - default is 200
+		test_query.limit = 10          #optional - default is 99999
+		test_query.project_scope_up = false
+		test_query.project_scope_down = true
+		test_query.order = "Name Asc"
+		test_query.query_string = "(FormattedID = \"#{tc_id}\")"
+		test_query.project = @project
+
+		results = @rally.find(test_query)
+
+		return results.first
+
+	end
+
 	def today8601
 
 		t = Time.now
 
+	end
+
+	def extract_testcaseid_from_name(name)
+		if (/.*(TC[0-9]{1,6}).*/ =~ name)
+			$1
+		else 
+			nil
+		end
 	end
 
 	def process_file rb_file
@@ -161,19 +191,30 @@ class RallyTestResults
 				timestamp = ts.at_xpath("@timestamp") ? ts.at_xpath("@timestamp").value : today8601
 				# print "Timestamp: #{timestamp}\n"
 				verdict = true
+				
 				tc_name =  ts.at_xpath("@name").value
+				tc_id = extract_testcaseid_from_name(tc_name)
 
-				rally_tc = find_test_case(tc_name)
+				if !tc_id
+					@logger.error("No Rally Test Case ID found in : #{tc_name}")
+					next 
+				end
+
+				# rally_tc = find_test_case(tc_name)
+				rally_tc = find_test_case_id(tc_id)
+				
 				if (rally_tc)
 					print "#{rally_tc["FormattedID"]}:#{rally_tc["Name"]}\n"
 				else
 					print "Not found:#{tc_name}\ncreating...\n"
-					rally_tc = @rally.create("testcase", {
-						"Workspace" => @workspace,
-						"Project" => @project,
-						"Name" => tc_name	
-					})
-					print "Created:#{rally_tc["FormattedID"]}\n"
+					@logger.error("Test Case ID not found : #{tc_id}")
+					next
+					# rally_tc = @rally.create("testcase", {
+					# 	"Workspace" => @workspace,
+					# 	"Project" => @project,
+					# 	"Name" => tc_name	
+					# })
+					# print "Created:#{rally_tc["FormattedID"]}\n"
 				end
 
 				mab = Markaby::Builder.new
