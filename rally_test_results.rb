@@ -6,6 +6,8 @@ require 'json'
 require 'time'
 require 'logger'
 
+# comments TA33
+
 class RallyTestResults 
 
 	def initialize configFile,build
