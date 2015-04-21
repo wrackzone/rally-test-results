@@ -199,6 +199,7 @@ class RallyTestResults
 				tc_id = extract_testcaseid_from_name(tc_name)
 
 				if !tc_id
+					@logger.error("***"+rb_file+"***")
 					@logger.error("No Rally Test Case ID found in : #{tc_name}")
 					next 
 				end
