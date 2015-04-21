@@ -214,12 +214,6 @@ class RallyTestResults
 					print "Not found:#{tc_name}\ncreating...\n"
 					@logger.error("Test Case ID not found : #{tc_id}")
 					next
-					# rally_tc = @rally.create("testcase", {
-					# 	"Workspace" => @workspace,
-					# 	"Project" => @project,
-					# 	"Name" => tc_name	
-					# })
-					# print "Created:#{rally_tc["FormattedID"]}\n"
 				end
 
 				mab = Markaby::Builder.new
@@ -266,15 +260,6 @@ class RallyTestResults
     				# "Date" => "2008-01-29T23:29:19.000Z"
     				"Date" => timestamp
     			})
-
-				# ts.xpath("testcase").each { |tc|
-				# 	print tc.at_xpath("@name"),"\n"
-
-				# 	if tc.at_xpath("failure")
-				# 		puts tc.children.size
-				# 	end
-				# }
-
 			}
 	end
 
